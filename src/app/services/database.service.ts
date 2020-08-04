@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
 
+import {AngularFirestore} from '@angular/fire/firestore'
+
 @Injectable({
   providedIn: 'root'
 })
@@ -8,6 +10,7 @@ export class DatabaseService {
   public db              :   any;
   public fireAuth        :   any;
   public STORAGE_REF     :   any;
+  public afstore         : any;
 
   constructor() {
     let self = this
@@ -15,6 +18,8 @@ export class DatabaseService {
     this.fireAuth = firebase.auth();
     this.STORAGE_REF = firebase.storage();
     this.db = firebase.firestore();
+
+     this.afstore = AngularFirestore
    }
 
   addUser(callback,userObj:any) {
@@ -97,5 +102,21 @@ export class DatabaseService {
     data,
     docRef
   })
+
+
+  setLocation( latitude, longitude)
+  {
+    this.afstore.collection("orderStatus").doc("orderId").set({
+      "timestamp" : Date.now(),
+      "latitude" : latitude,
+      "longitude" : longitude,
+    });
+  }
+
+  getLocation()
+  {
+     var latitude = this.afstore.collection("orderStatus").doc("orderId").get("latitude");
+     var latitude = this.afstore.collection("orderStatus").doc("orderId").get("longitude");
+  }
 
 }
